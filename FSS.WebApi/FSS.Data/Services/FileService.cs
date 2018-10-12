@@ -1,0 +1,59 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+using FSS.Data.Models;
+using FSS.Data.Repositories;
+using Microsoft.AspNetCore.Http;
+using dbo = FSS.Data.DbObjects;
+namespace FSS.Data.Services
+{
+    public class FileService : IFileService
+    {
+        private IEntityBaseRepository<dbo.File> _fileRepository = null;
+        public FileService(IEntityBaseRepository<dbo.File> fileRepository)
+        {
+            _fileRepository = fileRepository;
+        }
+        public async Task<List<FileRepsonseDto>> UploadFileAsync(List<IFormFile> files)
+        {
+            var lst = new List<FileRepsonseDto>();
+            foreach(IFormFile f in files)
+            {
+                var rst = await UploadFileAsync(f);
+                lst.Add(rst);
+            }
+            return lst;
+        }
+        public async Task<FileRepsonseDto> UploadFileAsync(IFormFile file)
+        {
+            var resp = new FileRepsonseDto();
+            return await SaveFile(file, resp);
+        }
+        
+        private async Task<FileRepsonseDto> SaveFile(IFormFile file, FileRepsonseDto resp)
+        {
+            try
+            {
+                var newFile = new dbo.File();
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "Files", file.Name);
+                var stream = new FileStream(path, FileMode.Create);
+                await file.CopyToAsync(stream);
+                newFile.Name = file.Name;
+                newFile.Path = path;
+                _fileRepository.Add(newFile);
+                _fileRepository.Commit();
+                resp.Message = "File Uploaded successfully";
+                resp.Status = StatusEnum.Success;
+
+            }
+            catch (Exception e)
+            {
+                resp.Status = StatusEnum.Error;
+                resp.Message = e.Message;
+            }
+            return resp;
+        }
+    }
+}
