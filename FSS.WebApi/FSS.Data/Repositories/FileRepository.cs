@@ -82,7 +82,7 @@ namespace FSS.Data.Repositories
             return base.ToString();
         }
 
-        public async Task<List<File>> GetPaginatedFiles(PagedRequestDto prd)
+        public async Task<PageItem<File>> GetPaginatedFiles(PagedRequestDto prd)
         {
             IQueryable<File> query = null; 
 
@@ -97,7 +97,7 @@ namespace FSS.Data.Repositories
 
             pageItem.TotalItems = query.Count();
 
-            return null;
+            return pageItem;
         }
 
     }

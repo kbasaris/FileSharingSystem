@@ -11,8 +11,8 @@ namespace FSS.Data.Services
 {
     public class FileService : IFileService
     {
-        private IEntityBaseRepository<dbo.File> _fileRepository = null;
-        public FileService(IEntityBaseRepository<dbo.File> fileRepository)
+        private IFileRepository _fileRepository = null;
+        public FileService(IFileRepository fileRepository)
         {
             _fileRepository = fileRepository;
         }
@@ -31,7 +31,7 @@ namespace FSS.Data.Services
             var resp = new FileRepsonseDto();
             return await SaveFile(file, resp);
         }
-        
+
         private async Task<FileRepsonseDto> SaveFile(IFormFile file, FileRepsonseDto resp)
         {
             try
@@ -44,6 +44,7 @@ namespace FSS.Data.Services
                 newFile.Path = path;
                 _fileRepository.Add(newFile);
                 _fileRepository.Commit();
+
                 resp.Message = "File Uploaded successfully";
                 resp.Status = StatusEnum.Success;
 
@@ -54,6 +55,11 @@ namespace FSS.Data.Services
                 resp.Message = e.Message;
             }
             return resp;
+        }
+
+        public async Task<PageItem<dbo.File>> GetPaginatedFiles(PagedRequestDto prd)
+        {
+            return await _fileRepository.GetPaginatedFiles(prd);
         }
     }
 }
