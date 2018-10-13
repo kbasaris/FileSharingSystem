@@ -3,13 +3,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FSS.WebApi.Controllers
 {
-    [Authorize(Policy = "ApiUser")]
-    [Route("api/[controller]/[action]")]
+   
+    [Route("[controller]/[action]")]
     public class HomeController : Controller
     {
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            return Ok();
         }
     }
 }

@@ -42,6 +42,8 @@ namespace FSS.WebApi
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IJwtFactory, JwtFactory>();
             services.AddTransient<JwtIssuerOptions, JwtIssuerOptions>();
+            services.AddTransient<IFileRepository, FileRepository>();
+            services.AddTransient<IFileService, FileService>();
             services.AddScoped(typeof(IEntityBaseRepository<>), typeof(EntityBaseRepository<>));
 
             var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));

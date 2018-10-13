@@ -28,8 +28,6 @@
   <ItemGroup>
     <Reference Include="FSS.Data">
       <HintPath>..\FSS.Data\bin\Debug\netcoreapp2.0\FSS.Data.dll</HintPath>
-      <Private>true</Private>
-      <SpecificVersion>false</SpecificVersion>
     </Reference>
   </ItemGroup>
 
