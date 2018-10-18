@@ -29,9 +29,9 @@ namespace FSS.WebApi.Controllers
         }
         [HttpPost("Upload")]
         [AllowAnonymous]
-        public async Task<FileRepsonseDto> UploadFile(IFormFile file)
+        public async Task<IActionResult> UploadFile(IFormFile file)
         {
-            return await _fileService.UploadFileAsync(file);
+            return Ok(await _fileService.UploadFileAsync(Request.Form.Files));
         }
 
         [HttpPost("GetFiles")]

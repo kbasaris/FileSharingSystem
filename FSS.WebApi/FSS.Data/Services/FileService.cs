@@ -16,15 +16,16 @@ namespace FSS.Data.Services
         {
             _fileRepository = fileRepository;
         }
-        public async Task<List<FileRepsonseDto>> UploadFileAsync(List<IFormFile> files)
+        public async Task<FileRepsonseDto> UploadFileAsync(IFormFileCollection files)
         {
-            var lst = new List<FileRepsonseDto>();
+            var rsp = new FileRepsonseDto();
             foreach(IFormFile f in files)
             {
                 var rst = await UploadFileAsync(f);
-                lst.Add(rst);
+                rsp.Message = "File Uploaded Successfully";
+                rsp.Status = StatusEnum.Success;
             }
-            return lst;
+            return rsp;
         }
         public async Task<FileRepsonseDto> UploadFileAsync(IFormFile file)
         {
@@ -37,7 +38,7 @@ namespace FSS.Data.Services
             try
             {
                 var newFile = new dbo.File();
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "Files", file.Name);
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "Files", file.FileName);
                 var stream = new FileStream(path, FileMode.Create);
                 await file.CopyToAsync(stream);
                 newFile.Name = file.Name;
